@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mood Booster Auliaaaaaaa 🐰✨</title>
+<style>
+  :root { --pink:#ff6fa5; --pink2:#e0508a; --ink:#4a2f42; --soft:#9a6f89; --cream:#fff7fb; }
+  * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+  body {
+    min-height:100vh; display:flex; align-items:center; justify-content:center; padding:18px;
+    font-family:"Comic Sans MS","Segoe UI",system-ui,sans-serif; color:var(--ink);
+    background:linear-gradient(160deg,#ffd9e8,#fff0c9 45%,#d9ecff); background-size:200% 200%;
+    animation:bg 12s ease infinite; overflow-x:hidden;
+  }
+  @keyframes bg { 50% { background-position:100% 100%; } }
+  .float { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+  .f { position:absolute; bottom:-50px; animation:rise linear infinite; opacity:.75; }
+  @keyframes rise { to { transform:translateY(-115vh) rotate(30deg); opacity:0; } }
+
+  .card {
+    position:relative; z-index:1; width:100%; max-width:440px; text-align:center;
+    background:rgba(255,255,255,.9); border:3px dashed #ffb3d1; border-radius:28px;
+    padding:24px 20px; box-shadow:0 18px 40px rgba(224,80,138,.22);
+  }
+  h1 { font-size:21px; color:var(--pink2); margin-bottom:4px; }
+  .sub { font-size:13px; color:var(--soft); margin-bottom: 10px; }
+  .mascot { font-size:80px; line-height:1; cursor:pointer; display:inline-block; animation:bounce 1.6s ease-in-out infinite; user-select:none; }
+  .mascot:active { transform:scale(.8) rotate(-10deg); }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px) rotate(4deg)} }
+  .bubble {
+    position:relative; background:var(--cream); border:2px solid #ffd0e2; border-radius:18px;
+    padding:16px; margin:16px 0 14px; font-size:16.5px; line-height:1.65; min-height:104px;
+    display:flex; align-items:center; justify-content:center; white-space:pre-line;
+  }
+  .bubble::before {
+    content:""; position:absolute; top:-10px; left:50%; margin-left:-9px; width:16px; height:16px;
+    background:var(--cream); border-left:2px solid #ffd0e2; border-top:2px solid #ffd0e2; transform:rotate(45deg);
+  }
+  .pop { animation:pop .35s ease; }
+  @keyframes pop { 0%{transform:scale(.9);opacity:.3} 100%{transform:scale(1);opacity:1} }
+
+  .row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  button {
+    border:none; cursor:pointer; font-family:inherit; font-size:14.5px; padding:12px 10px;
+    border-radius:16px; transition:transform .15s; color:#fff;
+  }
+  button:hover { transform:translateY(-2px) scale(1.03); }
+  button:active { transform:scale(.96); }
+  .b1 { background:linear-gradient(135deg,#ff6fa5,#e0508a); box-shadow:0 5px 0 #c13f77; }
+  .b2 { background:linear-gradient(135deg,#ffb347,#ff8c42); box-shadow:0 5px 0 #d9702a; }
+  .b3 { background:linear-gradient(135deg,#7ac7ff,#4aa3f0); box-shadow:0 5px 0 #3685cc; }
+  .b4 { background:linear-gradient(135deg,#b69cff,#8f6ef0); box-shadow:0 5px 0 #7154c9; }
+  .full { grid-column:1 / -1; }
+
+  .game { margin-top:16px; padding:12px; background:#fff0f6; border-radius:18px; border:2px solid #ffd0e2; }
+  .game p { font-size:13px; margin-bottom:8px; color:var(--soft); }
+  .arena { position:relative; height:120px; background:#fff; border-radius:12px; overflow:hidden; border:2px dashed #ffd0e2; }
+  .target { position:absolute; font-size:34px; cursor:pointer; user-select:none; transition:left .25s, top .25s; }
+  .score { margin-top:8px; font-size:14px; color:var(--pink2); }
+  .from { margin-top:14px; font-size:13px; color:var(--soft); }
+  .confetti { position:fixed; top:-20px; z-index:5; pointer-events:none; animation:fall linear forwards; }
+  @keyframes fall { to { transform:translateY(110vh) rotate(540deg); opacity:.9; } }
+</style>
+</head>
+<body>
+<div class="float" id="float"></div>
+
+<div class="card">
+  <h1>Halo Auliaaaaaaaaaaaaaaaaa! 🌸</h1>
+  <p class="sub">Halaman ini cuma buat bikin harimu lebih cerah</p>
+
+  <span class="mascot" id="mascot">🐰</span>
+  <div class="bubble" id="bubble">Hai hai! Aku kelinci utusan.Tugasku cuma satu: bikin kamu senyum hari ini\. 😊</div>
+
+  <div class="row">
+    <button class="b1" id="btnPuji">💖 Pujian</button>
+    <button class="b2" id="btnJoke">😹 Receh</button>
+    <button class="b3" id="btnFakta">🧠 Fakta lucu</button>
+    <button class="b4" id="btnTugas">🎯 Misi kecil</button>
+    <button class="b1 full" id="btnPeluk">🤗 Peluk virtual</button>
+  </div>
+
+  <div class="game">
+    <p>Mini game: tangkap kelincinya! 🐇</p>
+    <div class="arena" id="arena"><span class="target" id="target">🐇</span></div>
+    <div class="score" id="score">Skor: 0</div>
+  </div>
+
+  <p class="from" id="from"></p>
+</div>
+
+<script>
+  // ====== EDIT BAGIAN INI ======
+  const NAMA_KAMU = "Fakih";   // ganti dengan namamu
+  // =============================
+
+  const puji = [
+    "Kamu tuh kayak matahari pagi: hadir aja udah bikin suasana lebih hangat. ☀️",
+    "Senyummu itu gratis, tapi dampaknya bikin hari orang jadi mahal nilainya. 😄",
+    "Kamu cantik, dan yang bikin lebih cantik itu caramu peduli sama orang. 🌸",
+    "Pengingat: kamu udah hebat banget sampai sini. Bangga lho! 🏆",
+    "Kalau dunia ini game, kamu pasti karakter favorit semua pemain. 🎮",
+    "Kamu itu limited edition. Nggak ada duplikatnya. ✨",
+    "Hari ini kamu cukup, nggak perlu sempurna. Beneran. 🫶"
+  ];
+  const jokes = [
+    "Kenapa kelinci nggak pernah galau?\nKarena dia selalu 'hop'-timis! 🐰",
+    "Apa bedanya kamu sama kalkulator?\nKalkulator ngitung angka, kamu ngitung senyum orang. 🧮",
+    "Kenapa wortel suka sama kelinci?\nSoalnya dia ngerasa 'dimakan' perhatian. 🥕",
+    "Nasi goreng apa yang paling sabar?\nNasi goreng yang nunggu diaduk. 🍳",
+    "Kenapa ayam nyebrang jalan?\nBiar ketemu kamu, katanya. 🐔",
+    "Hewan apa yang paling manis?\nSemut. Tapi kamu menang tipis. 🐜"
+  ];
+  const fakta = [
+    "Fakta: kelinci bisa loncat sampai 1 meter lebih tinggi dari badannya. Kamu juga bisa, secara mental. 🐇",
+    "Fakta: tertawa 15 menit bisa bikin tubuh lebih rileks. Ayo ketawa sedikit! 😆",
+    "Fakta: madu nggak pernah basi. Sama kayak kebaikan, awet. 🍯",
+    "Fakta: lumba-lumba punya nama panggilan satu sama lain. Lucu banget kan? 🐬",
+    "Fakta: memeluk bantal 20 detik bisa bikin hati lebih tenang. Coba deh. 🛏️",
+    "Fakta: kupu-kupu merasakan rasa lewat kakinya. Hidup yang unik! 🦋"
+  ];
+  const tugas = [
+    "Misi: minum segelas air putih sekarang. Hidrasi itu cinta diri. 💧",
+    "Misi: tarik napas dalam 3x. Tahan, lepas. Nah, mood naik 10%. 🌬️",
+    "Misi: puji satu hal kecil dari dirimu hari ini. Boleh banget! 🪞",
+    "Misi: dengerin satu lagu favorit sambil goyang kecil. 🎵",
+    "Misi: makan sesuatu yang enak. Kamu pantas. 🍰",
+    "Misi: senyum ke cermin 5 detik. Kelincinya mengawasi. 🐰"
+  ];
+  const peluk = [
+    "🤗 *peluk virtual terkirim!*\nTotal kehangatan: 100%.",
+    "🫂 Peluk erat dari kelinci.\nKalau capek, sandaran dulu ya.",
+    "🧸 Peluk beruang spesial.\nAman, empuk, dan bebas drama."
+  ];
+  const mascots = ["🐰","🐇","😆","🥳","😍","🤭","🥰"];
+
+  const idx = {puji:0, joke:0, fakta:0, tugas:0, peluk:0};
+  const $ = id => document.getElementById(id);
+
+  function say(list, key, n) {
+    $("bubble").textContent = list[idx[key]++ % list.length];
+    $("bubble").classList.remove("pop"); void $("bubble").offsetWidth; $("bubble").classList.add("pop");
+    $("mascot").textContent = mascots[Math.floor(Math.random()*mascots.length)];
+    confetti(n || 12);
+  }
+  $("btnPuji").onclick  = () => say(puji,  "puji", 16);
+  $("btnJoke").onclick  = () => say(jokes, "joke", 10);
+  $("btnFakta").onclick = () => say(fakta, "fakta", 8);
+  $("btnTugas").onclick = () => say(tugas, "tugas", 8);
+  $("btnPeluk").onclick = () => say(peluk, "peluk", 30);
+
+  const colek = ["Aduh geli! 🤭","Hihi sekali lagi! 🐰","Jangan sering-sering, nanti baper 😳","Colek terus ya kamu 😆"];
+  let ck = 0;
+  $("mascot").onclick = () => { $("bubble").textContent = colek[ck++ % colek.length]; confetti(6); };
+
+  // mini game
+  let sc = 0;
+  const arena = $("arena"), t = $("target");
+  function move() {
+    t.style.left = Math.random() * (arena.clientWidth - 40) + "px";
+    t.style.top  = Math.random() * (arena.clientHeight - 44) + "px";
+  }
+  t.onclick = () => {
+    sc++; $("score").textContent = "Skor: " + sc + (sc % 5 === 0 ? " 🎉 Jago banget!" : "");
+    if (sc % 5 === 0) confetti(24);
+    move();
+  };
+  move();
+
+  function confetti(n) {
+    const set = ["💗","🌸","✨","🎉","💕","🥕","⭐"];
+    for (let k=0;k<n;k++){
+      const c=document.createElement("div"); c.className="confetti"; c.textContent=set[k%set.length];
+      c.style.left=Math.random()*100+"vw"; c.style.fontSize=14+Math.random()*18+"px";
+      c.style.animationDuration=2+Math.random()*2.5+"s";
+      document.body.appendChild(c); setTimeout(()=>c.remove(),4800);
+    }
+  }
+
+  for (let n=0;n<18;n++){
+    const f=document.createElement("div"); f.className="f";
+    f.textContent=["🌸","💗","🥕","⭐","🍓","✨"][n%6];
+    f.style.left=Math.random()*100+"vw"; f.style.fontSize=14+Math.random()*20+"px";
+    f.style.animationDuration=9+Math.random()*10+"s"; f.style.animationDelay=-Math.random()*16+"s";
+    $("float").appendChild(f);
+  }
+
+  $("from").textContent = "dengan penuh kelinci, dari: " + fakih + " 💌";
+</script>
+</body>
+</html>
